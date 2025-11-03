@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joguinho</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom, #4a90e2, #7b68ee);
+            color: white;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: white;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .placar {
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .choices-container {
+            margin: 30px 0;
+        }
+
+        .choice-display {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px auto;
+            max-width: 300px;
+        }
+
+        label {
+            font-size: 1.1em;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #playerChoice, #computerChoice {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .buttons-container {
+            margin: 30px 0;
+        }
+
+        button {
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 25px;
+            font-size: 1.2em;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background-color: #ff5252;
+            transform: scale(1.1);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        #result {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Pedra Papel Tesoura 🌑📄✂️</h1>
+    
+    <div class="placar">
+        <p>Placar - Jogador: <span id="playerScore">0</span> | Computador: <span id="computerScore">0</span></p>
+    </div>
+
+    <div class="choices-container">
+        <div class="choice-display">
+            <label>🤡Jogador:</label>
+            <p id="playerChoice"></p>
+        </div>
+        <div class="choice-display">
+            <label>🤖Computador:</label>
+            <p id="computerChoice"></p>
+        </div>
+    </div>
+
+    <div class="buttons-container">
+        <button class="choice" data-choice="pedra">🌑Pedra</button>
+        <button class="choice" data-choice="papel">📄Papel</button>
+        <button class="choice" data-choice="tesoura">✂️Tesoura</button>
+    </div>
+
+    <p id="result"></p>
+
+    <script>
+        const choices = ['pedra', 'papel', 'tesoura'];
+        let pontuacaoJogador = 0;
+        let pontuacaoComputador = 0;
+
+        document.querySelectorAll('.choice').forEach(button => {
+            button.addEventListener('click', () => {
+                const playerChoice = button.dataset.choice;
+                const computerChoice = getComputerChoice();
+                const winner = determineWinner(playerChoice, computerChoice);
+                updateScores(winner);
+                showResult(playerChoice, computerChoice, winner);
+            });
+        });
+        
+        function getComputerChoice() {
+            const randomIndex = Math.floor(Math.random() * choices.length);
+            return choices[randomIndex];
+        }
+
+        function determineWinner(player, computer) {
+            if (player === computer) return 'empate';
+            if (
+                (player === 'pedra' && computer === 'tesoura') ||
+                (player === 'papel' && computer === 'pedra') ||
+                (player === 'tesoura' && computer === 'papel')
+            ) {
+                return 'jogador';
+            }
+            return 'computador';
+        }
+
+        function updateScores(winner) {
+            if (winner === 'jogador') {
+                pontuacaoJogador++;
+                document.getElementById('playerScore').textContent = pontuacaoJogador;
+            } else if (winner === 'computador') {
+                pontuacaoComputador++;
+                document.getElementById('computerScore').textContent = pontuacaoComputador;
+            }
+        }
+
+        function showResult(player, computer, winner) {
+            document.getElementById('playerChoice').textContent = player;
+            document.getElementById('computerChoice').textContent = computer;
+            
+            let message = '';
+            if (winner === 'empate') {
+                message = 'Empate! 🤝';
+            } else if (winner === 'jogador') {
+                message = 'Você venceu! 🎉';
+            } else {
+                message = 'Computador venceu! 🤖';
+            }
+            
+            document.getElementById('result').textContent = message;
+        }
+    </script>
+</body>
+</html>
